@@ -52,6 +52,8 @@
 %% for the whole article with \linenumbers.
 %% \usepackage{lineno}
 
+\usepackage{subcaption}
+
 \journal{Nuclear Instruments and Methods in Physics Research, A}
 
 \begin{document}
@@ -166,29 +168,69 @@ Vestibulum a turpis consequat, imperdiet lectus nec, gravida est. Morbi ut mi te
 \section{Methods}
 \label{sec:Methods}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi cursus dapibus diam non euismod. Quisque vitae pulvinar nulla. Maecenas lobortis elementum varius. Suspendisse at purus nec massa pharetra luctus. Morbi tellus magna, aliquet a ultrices aliquet, mollis sed tortor. Nulla facilisi. Vestibulum in erat a turpis tempor porta. Nunc mi lorem, ornare eget nibh eget, lacinia posuere orci. Maecenas varius mattis nunc, ac facilisis nibh aliquet ut. Integer eu eros nulla. Etiam facilisis sapien vitae velit finibus mattis.
-
-Donec facilisis, orci a pretium venenatis, leo metus elementum ligula, sit amet mattis sem lectus ut dolor. Fusce mollis quis nunc vel venenatis. Nulla nibh dolor, malesuada nec dapibus interdum, commodo sed velit. Maecenas feugiat nisl in rutrum bibendum. Nam mi nunc, ornare eu congue at, lacinia vitae sapien. Nullam sagittis aliquam sem, a mollis ex. Quisque blandit ex tellus, id consectetur purus pretium eget. Integer ligula urna, tincidunt ut egestas in, auctor vel neque. Etiam in nunc semper, dapibus turpis a, rhoncus nulla. Phasellus bibendum tortor eu ante vehicula volutpat. Praesent eget lorem et tellus vestibulum pharetra. Mauris lacus risus, elementum commodo magna eu, feugiat faucibus tellus. Mauris interdum, mauris in mattis ultricies, massa felis tristique sem, et ultrices lacus orci consectetur nibh.
-
-Cras porttitor ut odio vel pharetra. Proin porttitor quis mi a ultrices. Morbi egestas neque at vestibulum tristique. Praesent consequat enim eget nulla condimentum vestibulum ac sed turpis. Suspendisse libero ex, mollis eget erat et, pretium iaculis sapien. Nulla ultricies feugiat sapien non pellentesque. Duis tortor felis, ullamcorper a porttitor sit amet, tempor quis lorem. Maecenas blandit faucibus dolor, eu laoreet libero interdum non. Aliquam interdum ante lacus, vitae porta nunc ultricies id. Fusce porta interdum leo a bibendum. Proin tristique purus et bibendum rutrum. Duis molestie vulputate urna, vitae interdum diam sodales nec. Nunc pulvinar purus erat, sit amet consectetur magna mattis eu. Etiam tempus malesuada feugiat. Vivamus vulputate nunc ut eros imperdiet lobortis.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.5\textwidth]{figures/sensitivity_scan.pdf}
-    \caption{A caption.}
-    \label{fig:my_label}
+    \includegraphics[width=\columnwidth]{figures/multi_optics_measurement.pdf}
+    % \par\medskip
+    \begin{tabular}{lll}
+        \small\textbf{Parameter} & \small\textbf{Measurement} & \small\textbf{Model} \\
+        % \midrule
+        \small$\beta_x$ [m/rad] & \small22.06 $\pm$ 0.29 & \small22.00 \\
+        \small$\beta_y$ [m/rad] & \small4.01 $\pm$ 0.02 & \small3.81 \\
+        \small$\alpha_x$ & \small2.33 $\pm$ 0.04 & \small2.37 \\
+        \small$\alpha_y$ & \small-0.49 $\pm$ 0.01 & \small-0.60 \\
+        \small$\varepsilon_1$ [mm~mrad] & \small33.02 $\pm$ \small0.05 & - \\
+        \small$\varepsilon_2$ [mm~mrad] & \small25.67 $\pm$ \small1.03 & - \\
+        \small$\varepsilon_x$ [mm~mrad] & \small32.85 $\pm$ \small0.05 & - \\
+        \small$\varepsilon_y$ [mm~mrad] & \small25.87 $\pm$ \small0.12 & - \\
+      \end{tabular}
+    % \par\medskip
+    \caption{Reconstructed beam parameters and graphical output (in normalized phase space) from a multi-optics emittance measurement of a production beam.}
+    \label{fig:multi_optics_measurement}
 \end{figure}
 
-Interdum et malesuada fames ac ante ipsum primis in faucibus. Vivamus ultricies felis blandit dolor vestibulum semper. Nunc ultricies erat magna, id laoreet nisl maximus maximus. Etiam non tortor lectus. Suspendisse sodales mi elit, non malesuada orci condimentum ac. Sed tincidunt, urna eget facilisis ultricies, nulla diam laoreet nibh, sit amet ullamcorper eros leo faucibus nisi. Fusce eget vestibulum odio. Integer hendrerit erat sit amet tincidunt consequat. Quisque magna metus, iaculis ut tortor id, euismod posuere urna. Quisque a sapien tincidunt, laoreet eros eget, interdum lectus. Fusce ac faucibus felis. Praesent viverra lorem in porttitor viverra. Ut consectetur congue risus, vitae venenatis sapien imperdiet in. Sed rutrum, nulla ut ultrices suscipit, nulla lacus dapibus mi, id viverra ante velit nec mi.
 
-Vestibulum a turpis consequat, imperdiet lectus nec, gravida est. Morbi ut mi tempus tellus maximus ullamcorper at ut sem. Morbi dolor libero, finibus at porta a, suscipit a ex. Integer enim lectus, auctor a posuere commodo, egestas pharetra ipsum. Aliquam sit amet cursus risus. Praesent sollicitudin neque vitae mattis dignissim. Maecenas metus elit, molestie non fermentum a, iaculis sit amet diam. Nullam molestie aliquet sapien, hendrerit congue lacus. Sed nec nunc at tellus tincidunt scelerisque nec in turpis. Nam sed vulputate sem. Integer accumsan, odio ut vestibulum vehicula, tortor tellus sagittis nibh, eleifend finibus quam quam sagittis dui. Cras mollis diam nec lectus fringilla efficitur. \cite{Xiao2013}
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{figures/sensitivity_scan.pdf}
+    \caption{Scan of the phase advances at WS24.}
+    \label{fig:sensitivity_scan}
+\end{figure}
 
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}{0.95\columnwidth}
+        \includegraphics[width=\textwidth]{figures/mismatch.pdf}
+        \caption{}
+        \label{fig:mismatch}
+    \end{subfigure}
+    \hspace{1cm}
+    \begin{subfigure}{0.95\columnwidth}
+        \includegraphics[width=\textwidth]{figures/mismatch_unequal_emittances.pdf}
+        \caption{}
+        \label{fig:mismatch_unequal_emittances}
+    \end{subfigure}
+    \caption{Simulated fractional error and standard deviation of reconstructed intrinsic emittances as a function of the beam mismatch parameter. (a) $\varepsilon_1 / \varepsilon_2 = 1$; (b) $\varepsilon_1 / \varepsilon_2 = 3$.}
+\end{figure*}
 
 
 \section{Example application}
 \label{sec:Example application}
 
-This is a sentence to fill some space.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{0.49\columnwidth}
+        \includegraphics[width=\textwidth]{figures/emittances_exp1a.pdf}
+    \end{subfigure}
+    \begin{subfigure}{0.49\columnwidth}
+        \includegraphics[width=\textwidth]{figures/emittances_exp1b.pdf}
+    \end{subfigure}
+    \caption{Caption.}
+    \label{fig:mismatch}
+\end{figure}
 
 
 \section{Conclusion}
