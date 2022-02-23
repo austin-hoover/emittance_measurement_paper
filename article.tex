@@ -57,6 +57,7 @@
 \usepackage{gensymb} % \degree symbol
 \usepackage{bm}
 \usepackage{amsmath}
+\usepackage{dblfloatfix} % Put figures at bottom of page
 
 
 
@@ -126,7 +127,7 @@
             country={USA}}
 
 \begin{abstract}
-Tentative: A hadron beam with a uniform charge density, elliptical transverse profile, and small four-dimensional (4D) emittance could mitigate space charge effects in circular accelerators. A scheme to approximately create such a distribution is being tested in the Spallation Neutron Source (SNS). A critical component of these efforts is to measure the 4D emittance. The 4D emittance can be reconstructed from at least four measurements of the real-space moments with different transfer matrices connecting the reconstruction and measurement locations, accomplished by varying either the machine optics (multi-optics method) or the measurement location (fixed-optics method). In this paper, we discuss the implementation of a variant of the multi-optics method using the four available wire-scanners near the SNS target, as well as the modification of the wire-scanner region to utilize the fixed-optics method — a method that is preferred due to its speed but can potentially lead to unacceptable bias and uncertainty in the reconstructed emittances. We then demonstrate the usefulness of the fixed-optics method by reconstructing the 4D emittance as a function of time during accumulation in the SNS ring.
+Tentative: A hadron beam with a uniform charge density, elliptical transverse profile, and small four-dimensional (4D) emittance could mitigate space charge effects in circular accelerators. A scheme to approximately create such a distribution using charge-exchange injection and phase space painting is being tested in the Spallation Neutron Source (SNS). A critical component of these efforts is to measure the 4D emittance of the beam. The 4D emittance can be reconstructed from at least four measurements of the real-space moments with different transfer matrices connecting the reconstruction and measurement locations, accomplished by varying either the machine optics (multi-optics method) or the measurement location (fixed-optics method). In this paper, we discuss the implementation of a variant of the multi-optics method using the four available wire-scanners near the SNS target, as well as the modification of the wire-scanner region to utilize the fixed-optics method — a method that is preferred due to its speed but can potentially lead to unacceptable bias and uncertainty in the reconstructed emittances. We then demonstrate the usefulness of the fixed-optics method by reconstructing the 4D emittance as a function of time during accumulation in the SNS ring.
 \end{abstract}
 
 % %%Graphical abstract
@@ -159,7 +160,7 @@ Tentative: A hadron beam with a uniform charge density, elliptical transverse pr
 \label{sec:Introduction}
 
 
-A hadron beam with a uniform charge density, elliptical transverse profile, and small four-dimensional (4D) emittance — i.e. volume in $x$-$x'$-$y$-$y'$ phase space — could mitigate space charge effects in circular accelerators \cite{Danilov2003, Burov2010, Holmes2018, Hoover2021}. A scheme to approximately create such a distribution using charge-exchange injection and phase space painting is being tested in the Spallation Neutron Source \cite{Hoover2021HB, Hoover2021Thesis}. A critical component of these efforts is to measure the 4D beam emittance throughout accumulation.
+A hadron beam with a uniform charge density, elliptical transverse profile, and small four-dimensional (4D) emittance — i.e. volume in $x$-$x'$-$y$-$y'$ phase space — could mitigate space charge effects in circular accelerators \cite{Danilov2003, Burov2010, Holmes2018, Hoover2021}. A scheme to approach such such a distribution using charge-exchange injection and phase space painting is being tested in the Spallation Neutron Source \cite{Hoover2021HB, Hoover2021Thesis}. A critical component of these efforts is to measure the 4D beam emittance throughout accumulation, which remains close to zero in the desired case.
 
 [\dots...] 
 
@@ -169,29 +170,27 @@ A hadron beam with a uniform charge density, elliptical transverse profile, and 
 It is often sufficient to characterize a phase space distribution by its covariance matrix $\bm{\Sigma} = \langle{\mathbf{x}\mathbf{x}^T}\rangle$, where $\mathbf{x}$ is the phase space coordinate vector and $\langle{\dots}\rangle$ represents the average over the distribution. In the transverse plane:
 %
 \begin{equation}\label{eq:covariance_matrix}
-\begin{aligned}
-    \bm{\Sigma} &= 
+    \bm{\Sigma} = 
     \begin{bmatrix}
         \langle{xx}\rangle & \langle{xx'}\rangle & \langle{xy}\rangle & \langle{xy'}\rangle \\
         \langle{xx'}\rangle & \langle{x'x'}\rangle & \langle{x'y}\rangle & \langle{x'y'}\rangle \\
         \langle{xy}\rangle & \langle{x'y}\rangle & \langle{yy}\rangle & \langle{yy'}\rangle \\
         \langle{xy'}\rangle & \langle{x'y'}\rangle & \langle{yy'}\rangle & \langle{y'y'}\rangle 
     \end{bmatrix}
-    &= 
+    = 
     \begin{bmatrix}
         \bm{\sigma}_{xx} & \bm{\sigma}_{xy} \\
         \bm{\sigma}^T_{xy} & \bm{\sigma}_{yy}
     \end{bmatrix}.
-\end{aligned}
 \end{equation}
 %
-The covariance matrix defines an ellipsoid from $\mathbf{x}^T \bm{\Sigma}^{-1} \mathbf{x} = 1$. The 4D emittance $\varepsilon_{4D}$ is proportional to the volume of the this ellipsoid and is conserved in any linear focusing system. It is defined by 
+The covariance matrix defines an ellipsoid from $\mathbf{x}^T \bm{\Sigma}^{-1} \mathbf{x} = 1$. The 4D emittance $\varepsilon_{4D}$ is proportional to the volume of this ellipsoid and is conserved in any linear focusing system. It is defined by 
 %
 \begin{equation}
     \varepsilon_{4D} = \left|{\bm{\Sigma}}\right|^{1/2} = \varepsilon_1\varepsilon_2 \le \varepsilon_x\varepsilon_y,
 \end{equation}
 %
-where $|...|$ is the determinant. We have also defined the intrinsic emittances $\varepsilon_{1,2}$, which are individually conserved. The intrinsic emittances are found by a symplectic diagonalization of $\bm{\Sigma}$ \cite{Dragtbook}, i.e., they are the imaginary components of the eigenvalues of $\bm{\Sigma}\mathbf{U}$, where $\mathbf{U}$ is the unit symplectic matrix:
+where $|...|$ is the determinant. We have also defined the intrinsic emittances $\varepsilon_{1,2}$, which are individually conserved and found by a symplectic diagonalization of $\bm{\Sigma}$ \cite{Dragtbook}, i.e., they are the imaginary components of the eigenvalues of $\bm{\Sigma}\mathbf{U}$ with
 %
 \begin{equation}
     \mathbf{U} = 
@@ -205,7 +204,7 @@ where $|...|$ is the determinant. We have also defined the intrinsic emittances 
 %
 The apparent emittances $\varepsilon_x = \left|{\bm\sigma}_{xx}\right|^{1/2}$ and $\varepsilon_y = \left|{\bm\sigma}_{yy}\right|^{1/2}$ are conserved only in uncoupled linear focusing systems. The intrinsic and apparent emittances coincide in the absence of cross-plane correlations ($\bm{\sigma}_{xy} = 0$).
  
-The covariance matrix can be reconstructed from measurements of the $\langle{xx}\rangle$, $\langle{yy}\rangle$, and $\langle{xy}\rangle$ moments. \cite{book:Minty2003}. We seek to reconstruct $\bm{\Sigma}$ at position $a$ by measuring $\langle{xx}\rangle$, $\langle{yy}\rangle$ and $\langle{xy}\rangle$ at position $b$, downstream of $a$. Assuming linear transport, the two covariance matrices are related by $\bm{\Sigma}_b = \mathbf{M} \bm{\Sigma}_a \mathbf{M}^T$, where $\mathbf{M}$ is the linear transfer matrix from $a$ to $b$. Each measurement gives the following linear system of equations:
+The covariance matrix at position $a$ along the beamline can be reconstructed by measuring $\langle{xx}\rangle$, $\langle{yy}\rangle$ and $\langle{xy}\rangle$ at position $b$, downstream of $a$. Assuming linear transport, the two covariance matrices are related by $\bm{\Sigma}_b = \mathbf{M} \bm{\Sigma}_a \mathbf{M}^T$, where $\mathbf{M}$ is the linear transfer matrix from $a$ to $b$. Thus, each measurement produces the following linear system of equations \cite{Wolski2020}:
 %
 \begin{equation}
     \begin{bmatrix}
@@ -226,10 +225,10 @@ The covariance matrix can be reconstructed from measurements of the $\langle{xx}
         \langle{yy'}\rangle \\
         \langle{y'y'}\rangle \\
     \end{bmatrix}_a
-    .
+    ,
 \end{equation}
 %
-The transpose of the coefficient matrix $\mathbf{A}$ is \cite{Wolski2020}
+with
 %
 \begin{equation}
     \mathbf{A}^T = 
@@ -245,14 +244,15 @@ The transpose of the coefficient matrix $\mathbf{A}$ is \cite{Wolski2020}
         2M_{13}M_{14} & M_{14}M_{33} + M_{13}M_{34} & 2M_{33}M_{34} \\
         M_{14}M_{14} & M_{14}M_{34} & M_{34}M_{34}
     \end{bmatrix}
+    ,
 \end{equation}
 %
-where $M_{ij}$ is the $i$,$j$ element of $\mathbf{M}$. We repeat the measurement at least four times with different transfer matrices — either by varying the optics or varying the measurement location — and solve the system using linear least squares (LLSQ). 
+where $M_{ij}$ is the $i$,$j$ element of $\mathbf{M}$. We repeat the measurement at least four times with different transfer matrices and solve the system using linear least squares (LLSQ). The transfer matrix can be changed by varying the transfer matrix, which we refer to as the multi-optics method, or by varying the measurement location, which we refer to as the fixed-optics method.
 
 
 \section{Implementation in the SNS}
 
-The real space moments of an accumulated beam in the SNS can be estimated using four wire-scanners — labeled WS20, WS21, WS23, and WS24 — in the ring-target beam transport (RTBT) section of the machine. The wire-scanner locations, quadrupole locations, and nominal optical functions are shown in Fig.~\ref{fig:rtbt}.
+The real space moments of an accumulated beam in the SNS can be estimated using four wire-scanners — labeled WS20, WS21, WS23, and WS24 — in the ring-target beam transport (RTBT) section of the machine. The wire-scanner locations, quadrupole locations, and nominal optical functions at the end of the RTBT are shown in Fig.~\ref{fig:rtbt}.
 %
 \begin{figure*}[!t]
     \centering
@@ -264,7 +264,7 @@ The real space moments of an accumulated beam in the SNS can be estimated using 
 \end{figure*}
 %
 
-The wire-scanners are run in parallel and take approximately five minutes to move across the beam and return to their original positions. Their step size is 3 mm and their dynamic range is approximately 100. They are run at a beam pulse frequency of 1 Hz.\footnote{Each data point corresponds to a separate beam pulse, so the measurement relies on pulse-to-pulse stability.} Each wire-scanner has a horizontal, vertical, and diagonal wire, producing $\langle{xx}\rangle$, $\langle{yy}\rangle$, and $\langle{uu}\rangle$, where the $u$ axis is tilted at angle $\phi = \pi/4$ above the $x$ axis, as well as $\langle{xy}\rangle$ from
+The wire-scanners are run in parallel and take approximately five minutes to move across the beam and return to their original positions. Their step size is 3 mm and their dynamic range is approximately 100. They are run at a beam pulse frequency of 1 Hz.\footnote{Each data point corresponds to a separate beam pulse, so the measurement relies on pulse-to-pulse stability.} Each wire-scanner has three wires to measure the 1D projection of the distribution onto the $x$, $y$ and $u$ axes, where $u$ is tilted at an angle $\phi = \pi / 4$ above the $x$ axis; $\langle{xx}\rangle$, $\langle{yy}\rangle$, and $\langle{uu}\rangle$ can be extracted from these projections, as well as $\langle{xy}\rangle$ from
 %
 \begin{equation}
     \langle{xy}\rangle = \frac{\langle{uu}\rangle - \langle{xx}\rangle \cos^2\phi - \langle{yy}\rangle \sin^2\phi}{2\sin\phi\cos\phi}
@@ -272,9 +272,9 @@ The wire-scanners are run in parallel and take approximately five minutes to mov
 \end{equation}
 %
 
-We first implemented a variant of the multi-optics method. In 2D emittance measurements, the phase advance from the reconstruction location to the measurement location is typically varied in a $180\degree$ range.\footnote{The phase advances are calculated under the assumption that the beam Twiss parameters are matched to the lattice Twiss parameters at the reconstruction location.} Prat and Aiba \cite{Prat2014} applied this strategy to the 4D emittance measurement: in the first half of the scan, the horizontal phase advance was varied while the vertical phase advance was held fixed, and in the second half of the scan, the vertical phase advance was varied while the horizontal phase advance was held fixed. Since the four SNS wire-scanners are already spaced somewhat evenly in phase advance, maximal phase coverage is possible by varying the phase advances at each wire-scanner in a $30\degree$ window. But control of the phase advances between each wire-scanner is limited due to the shared power supplies of the quadrupoles in the wire-scanner region. There are two power supplies in the wire-scanner region: one controls {QH18, QH20, QH22, QH24} and one controls {QH19, QH21, QH23, QH25} (the last five quadrupoles are controlled independently — see Fig.~\ref{fig:rtbt}). In addition to these constraints, the $\beta$ functions must be kept small in the wire-scanner region and must remain close to their nominal values at the target. 
+We first implemented a variant of the multi-optics method. In 2D emittance measurements, the phase advance from the reconstruction location to the measurement location is typically varied in a $180\degree$ range.\footnote{The phase advances are calculated under the assumption that the beam Twiss parameters are matched to the lattice Twiss parameters at the reconstruction location.} Prat and Aiba \cite{Prat2014} applied this strategy to the 4D emittance measurement: in the first half of the scan, the horizontal phase advance was varied while the vertical phase advance was held fixed, and in the second half of the scan, the vertical phase advance was varied while the horizontal phase advance was held fixed. Since the four SNS wire-scanners are already spaced somewhat evenly in phase advance, maximal phase coverage is possible by varying the phase advances at each wire-scanner in a $30\degree$ window; however, control of the phase advances between each wire-scanner is limited due to the shared power supplies of the RTBT quadrupoles. There are two power supplies in the wire-scanner region — one controls \{QH18, QH20, QH22, QH24\} and the other controls \{QH19, QH21, QH23, QH25\} — with the last five quadrupoles are controlled independently. In addition to these constraints, the $\beta$ functions must be kept small in the wire-scanner region and must remain close to their nominal values at the target. 
 
-We chose to vary the phase advances from QH18 (the first varied quadrupole) to WS24 (the last wire-scanner), which also changes the phase advances at WS20, WS21, and WS23 by similar amounts. To set the phase advances at WS24 while constraining the beam size in the wire-scanner region, the two power supplies (eight quadrupoles) upstream of WS24 were varied to minimize the following cost function:
+The best we can do is to control the phase advances from the first varied quadrupole (QH18) to the last wire-scanner (WS24), which also modifies the phase advances at the other wire-scanners by similar amounts. To control these phase advances the two power supplies (eight quadrupoles) in the wire-scanner region were varied to minimize the following cost function:
 %
 \begin{equation}
     C(\mathbf{g}) = \left\Vert{\tilde{\bm{\mu}} - \bm{\mu} }\right\Vert^2
@@ -288,9 +288,9 @@ We chose to vary the phase advances from QH18 (the first varied quadrupole) to W
     .
 \end{equation}
 %
-The quadrupole strengths are contained in the vector $\mathbf{g}$. The calculated and desired phase advances at WS24 are $\bm{\mu} = (\mu_x, \mu_y)$, and $\tilde{\bm{\mu}} = (\tilde{\mu}_x, \tilde{\mu}_y)$, respectively. The maximum calculated and allowed $\beta$ functions in the wire-scanner region are $\bm{\beta}_{max} = (\beta_{x_{max}}, \beta_{y_{max}})$ and $\tilde{\bm{\beta}}_{max} = (\tilde{\beta}_{x_{max}}, \tilde{\beta}_{y_{max}})$, respectively. $\Theta$ is the Heaviside step function. Finally, $\epsilon$ is a constant.
+The quadrupole strengths are contained in the vector $\mathbf{g}$; the calculated phase advances are $\bm{\mu} = (\mu_x, \mu_y)$; the desired phase advances are $\tilde{\bm{\mu}} = (\tilde{\mu}_x, \tilde{\mu}_y)$; the maximum calculated $\beta$ functions in the wire-scanner region is $\bm{\beta}_{max} = (\beta_{x_{max}}, \beta_{y_{max}})$; the maximum allowed $\beta$ function in the wire-scanner region is $\tilde{\bm{\beta}}_{max} = (\tilde{\beta}_{x_{max}}, \tilde{\beta}_{y_{max}})$; $\Theta$ is the Heaviside step function; $\epsilon$ is a constant. After this process is completed, the remaining five quadrupoles before the target are varied to constrain the beam size at the target.
 
-This multi-optics method was tested on a fully accumulated production beam in the SNS using ten total measurements (forty profiles), taking around one hour. The result of the reconstruction is shown in Fig.~\ref{fig:multi_optics_measurement}.
+This multi-optics method was tested on a fully accumulated production beam in the SNS using ten total measurements (forty profiles), which was completed in one hour. The reconstructed Twiss parameters, emittances, and best-fit ellipses in the $x$-$x'$ and $y$-$y'$ planes (normalized by the reconstructed Twiss parameters) are displayed in Fig.~\ref{fig:multi_optics_measurement}.
 %
 \begin{figure}[!b]
     \centering
@@ -313,13 +313,15 @@ This multi-optics method was tested on a fully accumulated production beam in th
     \label{fig:multi_optics_measurement}
 \end{figure}
 %
-The best-fit ellipses in the $x$-$x'$ and $y$-$y'$ planes are normalized by the reconstructed Twiss parameters. The uncertainties in the parameters were calculated by propagating the standard deviations of the ten reconstructed moments obtained from the linear least squares (LLSQ) estimator.\footnote{See Appendix A of \cite{Faus-Golfe2016}.} The reconstructed Twiss parameters are close to the model parameters computed from the linear transfer matrices of the ring and RTBT, showing that the beam is matched to the nominal RTBT optics when it is extracted from the ring. The intrinsic emittances are almost equal to the apparent emittances, showing that there is very little cross-plane correlation in the beam. This is expected for a production beam.
+The uncertainties in the parameters were calculated by propagating the standard deviations of the ten reconstructed moments obtained from the linear least squares (LLSQ) estimator.\footnote{See Appendix A of \cite{Faus-Golfe2016}.} The reconstructed Twiss parameters are close to the model parameters computed from the linear transfer matrices of the ring and RTBT, showing that the beam is matched to the nominal ring optics when it is extracted from the ring. The intrinsic emittances are almost equal to the apparent emittances, showing that there is very little cross-plane correlation in the beam. This is expected for a production beam.
 
-A comprehensive study of errors in the multi-optics 4D emittance measurement was completed at the SwissFEL Injector Test Facility (SITF) by Prat and Aiba in \cite{Prat2014}. They considered errors in the measured moments, quadrupole field and alignment errors, beam energy errors, beam mismatch at the reconstruction point, and dispersion/chromaticity \cite{Mostacci2012}, concluding that the multi-optics measurement remained accurate, reporting $< 5\%$ uncertainty in the intrinsic emittances. We initially performed similar studies using envelope tracking to estimate the reconstruction errors in the RTBT, also concluding that the method should remain accurate \cite{Hoover2021-IPAC}. Space charge forces, which can render the method invalid for high-perveance beams \cite{Anderson2002}, can be neglected: the space charge tune shift in the ring is around 3\%, and the distance between the reconstruction and measurement locations is much smaller than the length of the ring. 
+A comprehensive study of errors in the multi-optics 4D emittance measurement was completed at the SwissFEL Injector Test Facility (SITF) by Prat and Aiba in \cite{Prat2014}. They considered errors in the measured moments, quadrupole field and alignment errors, beam energy errors, beam mismatch at the reconstruction point, and dispersion/chromaticity \cite{Mostacci2012}, concluding that the multi-optics measurement remained accurate, reporting $< 5\%$ uncertainty in the intrinsic emittances. We initially performed similar studies using envelope tracking to estimate the reconstruction errors in the RTBT, also concluding that method should remain accurate \cite{Hoover2021-IPAC}: from repeated wire-scanner measurements with the same machine setup, we estimate the error in the measured moments to be only 3\%, and none of the other sources of uncertainty were found to have a large effect on the reconstructed emittances. Space charge forces, which can render the method invalid for high-perveance beams \cite{Anderson2002}, can be neglected: the space charge tune shift in the ring is around 3\%, and the distance between the reconstruction and measurement locations is much smaller than the length of the ring ($\approx$ 250 meters). 
 
-Although the multi-optics method is feasible in the SNS, the fixed-optics method is desired because of its speed, which would allow the measurement of the intrinsic emittances as a function of time during injection and the evaluation of many different machine states within one study period. However, the nominal optics in the RTBT are ill-suited for the fixed-optics reconstruction: if only one set of optics from Fig.~\ref{fig:multi_optics_measurement} is used, the resulting covariance matrix is not positive-definite. We label this a failed fit. A nonlinear solver can be used to ensure a valid covariance matrix \cite{Raimondi1993}, but we found that the answer depended strongly on the initial guess provided to the solver, as well as on which set of optics in the scan was used in the reconstruction.
+In summary, the multi-optics emittance measurement is feasible in the SNS and should produce reasonably accurate values of the intrinsic beam emittances. The only downside is the slow measurement speed, for the following reasons. First, we are not only interested in the beam emittances at a single time, but are also interested in the growth and evolution of the emittances throughout accumulation. For example, it could be possible for $\varepsilon_2$ to remain small (as desired) for the first half of accumulation before growing to a much larger value in the second half of accumulation. Measurement of this emittance evolution would convey valuable information about the beam dynamics and allow for qualitative comparison with computer simulation. Second, it would be beneficial to quickly evaluate various machine states, the best of which will be unknown during initial experiments. Finally, a practical point: the time reserved for accelerator physics (AP) studies at the SNS is limited, and setup for initial experiments will be much longer than typical AP studies for reasons not discussed in this paper. Thus, the fixed-optics method is preferred in which the reconstruction is performed in one pass, without changing magnet strengths. A modest reduction in accuracy for the increase in speed is warranted since weak cross-plane correlations ($\varepsilon_1 \varepsilon_2 \approx \varepsilon_x \varepsilon_y$) are uninteresting for our purposes and do not need to be resolved.
 
-To investigate the sensitivity of the fixed-optics reconstruction, we generated a covariance matrix with $\varepsilon_1 = \varepsilon_x$ = 32 mm~mrad and $\varepsilon_2 = \varepsilon_y$ = 25 mm~mrad, close to the measured values, and with Twiss parameters matched to the lattice. This covariance matrix was tracked to the wire-scanners using the transfer matrices from the fifth step in the scan of Fig.~\ref{fig:multi_optics_measurement}, and the reconstruction was performed many times as 3\% random noise was added to the $\langle{xx}\rangle$, $\langle{yy}\rangle$, and $\langle{uu}\rangle$ moments. (The noise level was determined by repeatedly running the wire-scanners without changing the machine state; the profiles are highly reproducible and the maximum discrepancy between any two moments extracted from the profiles was 3\%. This corresponds to a fractional error of 1.5\% in the root-mean-square beam size.) This resulted in a large fraction of failed trials, but some successful trials. Fig.~\ref{fig:failed_fits} shows the emittances for the successful trials.
+Unfortunately, the nominal optics in the RTBT are ill-suited for the fixed-optics reconstruction: if only one set of optics from Fig.~\ref{fig:multi_optics_measurement} is used, the resulting covariance matrix is not positive-definite. We label this a failed fit. A nonlinear solver can be used to ensure a valid covariance matrix \cite{Raimondi1993}, but we found that the answer depended strongly on the initial guess provided to the solver and on the selected measurement index.
+
+To investigate the sensitivity of the fixed-optics reconstruction, we generated a covariance matrix with $\varepsilon_1 = \varepsilon_x$ = 32 mm~mrad and $\varepsilon_2 = \varepsilon_y$ = 25 mm~mrad, close to the measured values, and with Twiss parameters matched to the lattice. This covariance matrix was tracked to the wire-scanners using the transfer matrices from the fifth step in the scan of Fig.~\ref{fig:multi_optics_measurement}, and the reconstruction was performed many times as 3\% random noise was added to the $\langle{xx}\rangle$, $\langle{yy}\rangle$, and $\langle{uu}\rangle$ moments. This resulted in a large fraction of failed trials, but some successful trials. Fig.~\ref{fig:failed_fits} shows the emittances for the successful trials.
 %
 \begin{figure}[b!]
     \centering
@@ -336,11 +338,11 @@ To investigate the sensitivity of the fixed-optics reconstruction, we generated 
 %     \label{fig:profiles}
 % \end{figure}
 %
-Unlike the apparent emittances, the intrinsic emittances are strongly correlated and are not centered on the correct values. 
+Unlike the apparent emittances, the intrinsic emittances are strongly correlated and are not centered on the correct values. Our primary concern is to reduce the latter effect, which we refer to as bias. 
 
-Sensitivity of fixed-optics 4D emittance measurements was observed by Woodley and Emma \cite{Woodley2000} and studied more recently by Agapov, Blair, and Woodley \cite{Agapov2007} as well as Faus-Golfe et al. \cite{Faus-Golfe2016}, all in the context of design studies for a future International Linear Collider (ILC). The motivation for these studies was to remove the cross-plane correlation in the beam to minimize the vertical emittance $\varepsilon_y$. Woodley and Emma proposed to abandon the fixed-optics method due to the bias in the reconstructed intrinsic emittances introduced by large errors in the measured moments, suggesting to instead measure the apparent emittances and iteratively minimize $\varepsilon_y$. Agapov, Blair, and Woodley revisited this problem and showed that the linear system used to reconstruct the cross-plane moments can easily become ill-conditioned, and therefore very sensitive to errors in the measured moments, suggesting the use of the coefficient number $C = \Vert \mathbf{A} \Vert \Vert \mathbf{A}^{-1} \Vert$ to characterize the sensitivity. Faus-Golfe et al. built on this work, studying the problem analytically. They suggested that the optics in the planned ILC emittance measurement station, which contains four wire-scanners, could be modified to allow use of the fixed-optics reconstruction.
+Sensitivity of fixed-optics 4D emittance measurements was observed by Woodley and Emma \cite{Woodley2000} and studied more recently by Agapov, Blair, and Woodley \cite{Agapov2007} as well as Faus-Golfe et al. \cite{Faus-Golfe2016}, all in the context of design studies for a future International Linear Collider (ILC). The motivation for these studies was to remove the cross-plane correlation in the beam to minimize the vertical emittance $\varepsilon_y$. Woodley and Emma proposed to abandon the fixed-optics method due to the bias in the reconstructed intrinsic emittances introduced by large errors in the measured moments, suggesting to instead measure the apparent emittances and iteratively minimize $\varepsilon_y$. Agapov, Blair, and Woodley revisited this problem and showed that the linear system used to reconstruct the cross-plane moments can easily become ill-conditioned, and hence very sensitive to errors in the measured moments, suggesting the use of the coefficient number $C = \Vert \mathbf{A} \Vert \Vert \mathbf{A}^{-1} \Vert$ to characterize the sensitivity. Faus-Golfe et al. built on this work, studying the problem analytically. They suggested that the optics in the planned ILC emittance measurement station, which contains four wire-scanners, could be modified to allow use of the fixed-optics reconstruction.
 
-We performed a similar modification of the RTBT optics. Recall that there are only two knobs available in our case: the two power supplies in the wire-scanner region used to control the phase advances at the final wire-scanner. To search for a better set of optics, we varied the phase advances at the last wire-scanner ($\mu_x$, $\mu_y$) around their nominal values ($\mu_{x0}$, $\mu_{y0}$) in a $90\degree$ window. At each setting, a matched covariance matrix with $\varepsilon_1 = \varepsilon_2 = \varepsilon_x = \varepsilon_y$ was generated and tracked to the wire-scanner locations. The reconstruction was again simulated with 3\% random noise added to the ``measured" moments, repeating over a few thousand trials. The mean and standard deviation of the emittances were calculated over all successful trials. The fractional difference between the mean emittances and the true emittances are plotted for each optics setting in Fig.~\ref{fig:sensitivity_scan}, as well as the fractional standard deviations on the bottom row.
+We performed a similar modification of the RTBT optics. Recall that there are only two knobs available in our case: the two power supplies in the wire-scanner region used to control the phase advances at the final wire-scanner. To search for a better set of optics, we varied these phase advances ($\mu_x$, $\mu_y$) in a $90\degree$ window around their nominal values ($\mu_{x0}$, $\mu_{y0}$). At each setting, a matched covariance matrix with $\varepsilon_1 = \varepsilon_2 = \varepsilon_x = \varepsilon_y$ was generated and tracked to the wire-scanner locations. The reconstruction was again simulated with 3\% random noise added to the ``measured" moments, repeating over a few thousand trials. The mean and standard deviation of the emittances were calculated over all successful trials. The fractional difference between the mean emittances and the true emittances are plotted for each optics setting in Fig.~\ref{fig:sensitivity_scan}, as well as the fractional standard deviations on the bottom row.
 %
 \begin{figure}[!b]
     \centering
@@ -349,13 +351,12 @@ We performed a similar modification of the RTBT optics. Recall that there are on
     \label{fig:sensitivity_scan}
 \end{figure}
 
-Settings that produced no successful trials appear as white cells. The apparent emittances are not displayed because they remained within 1\% of their true values at every optics setting. Modifying the optics so that $\mu_x = \mu_{x0} + 45\degree$, $\mu_y = \mu_{y0} - 45\degree$ reduces the fractional errors to $\approx 7\%$ and the fractional standard deviation to $\approx 5\%$. The fraction of failed fits, which is very large along the diagonal in the figure, is reduced to zero. 
+Settings that produced no successful trials appear as white cells. The apparent emittances are not displayed because they remained within 1\% of their true values at every optics setting. It is clear that modifying the optics so that $\mu_x = \mu_{x0} + 45\degree$, $\mu_y = \mu_{y0} - 45\degree$ — i.e., the lower-right corner of each subplot — reduces the fractional errors to $\approx 7\%$ and the fractional standard deviation to $\approx 5\%$. The fraction of failed fits, which is very large along the diagonal in the figure, is reduced to zero at this setting.
 
-It is also important to examine the effect of mismatched beam parameters — $\alpha_x$, $\beta_x$, $\alpha_y$, $\beta_y$ — on the accuracy of the reconstruction. All previous phase advance calculations have assumed that the beam Twiss parameters are the same as the ring Twiss parameters at extraction. As seen in Fig.~\ref{fig:multi_optics_measurement}, this is approximately true for the normal injection scheme in the SNS. It is possible, however, for space charge to effectively modify the ring Twiss parameters, resulting in mismatch when entering the RTBT. This modification is small for the normal injection scheme, as shown in Fig.~\ref{fig:prod_meas}, but we have generated more significant mismatch in our studies of non-standard injection schemes. One example is shown in Table~\ref{tab:mismatch}.
+It is also important to examine the effect of mismatched beam parameters — $\alpha_x$, $\beta_x$, $\alpha_y$, $\beta_y$ — on the reconstruction accuracy. All previous phase advance calculations have assumed that the beam Twiss parameters are the same as the ring Twiss parameters at extraction. As seen in Fig.~\ref{fig:multi_optics_measurement}, this is approximately true for the normal injection scheme in the SNS. It is possible, however, for space charge to effectively modify the ring Twiss parameters, resulting in mismatch when entering the RTBT. This modification is small for the normal injection scheme, as shown in Fig.~\ref{fig:prod_meas}, but we have generated more significant mismatch in our studies of non-standard injection schemes. One example is shown in Table~\ref{tab:mismatch}.
 %
-\begin{table}[!p]
+\begin{table}[!h]
     \centering
-    \caption{Measured mismatch in the RTBT.}
     \begin{tabular}{lll}
     % \midrule
     \textbf{Parameter} & \textbf{Measured} & \textbf{Model} \\
@@ -366,6 +367,7 @@ It is also important to examine the effect of mismatched beam parameters — $\a
     $\alpha_y$ & 1.17 & 1.91 \\
     % \midrule    
     \end{tabular}
+    \caption{Measured mismatch in the RTBT.}
     \label{tab:mismatch}
 \end{table}
 %
@@ -388,32 +390,35 @@ The beam mismatch is unlikely to exceed these values in our studies. To examine 
     \caption{Simulated fractional error and standard deviation of reconstructed intrinsic emittances as a function of the beam mismatch parameter. (a) $\varepsilon_1 / \varepsilon_2 = 1$; (b) $\varepsilon_1 / \varepsilon_2 = 3$.}
 \end{figure*}
 
-The standard deviation remains acceptable, but the error of the mean emittances grows from $\approx 7\%$ to $\approx 12\%$ in some cases. With this level of bias in the measurement, it may be difficult to resolve a distribution with weak cross-plane correlations; however, the measurement should still resolve a distribution with strong cross-plane correlations. This is demonstrated in Fig.~\ref{fig:mismatch_correlatedbeam}, which repeats the calculations for an input beam with $\varepsilon_1 / \varepsilon_2 = 3$. The bias in the reconstruction is now largely absent — the mean reconstructed intrinsic emittances in the Monte Carlo trails are close to their correct values. 
-
-We conclude that with small changes to the optics, the fixed-optics method should be sufficient for fast 4D emittance measurements in the SNS. Such measurements will be useful to measure the emittance growth during accumulation for qualitative comparison with simulation, as well as to evaluate various machine settings, within a single study period. 
+The standard deviation remains acceptable, but the error of the mean emittances grows from $\approx 7\%$ to $\approx 12\%$ in some cases. With this level of bias in the measurement, it may be difficult to resolve a distribution with weak cross-plane correlations; however, the measurement should still resolve a distribution with strong cross-plane correlations. This is demonstrated in Fig.~\ref{fig:mismatch_unequal_emittances}, which repeats the calculations for an input beam with $\varepsilon_1 / \varepsilon_2 = 3$. The bias in the reconstruction is now largely absent — the reconstructed intrinsic emittances are clustered around their true values. We conclude that with small modifications to the RTBT optics, the fixed-optics method should be sufficient for fast 4D emittance measurements in the SNS.
 
 
 \section{Example application}
 \label{sec:Example application}
+
+We now demonstrate the usefulness of the fixed-optics emittance measurement in the SNS. Again, our goal is to generate a beam with a uniform charge density, elliptical transverse profile, and small 4D emittance. This can be accomplished using phase space painting to inject particles along an eigenvector of the ring transfer matrix; if this is accomplished, the particles trace ellipses on a turn-by-turn basis in the $x$-$y$ plane and a uniform density ellipse is maintained throughout injection; hence, the 4D emittance is near zero throughout accumulation. This technique, which we refer to as \textit{elliptical painting}, requires variation not only of the distance between circulating and injected beams — as in \textit{correlated painting} — but also of the angle between the beams. We represent the distances as $x$ and $y$ and the angles as $x'$ and $y'$. In our case, we start with $x = x' = y = y' = 0$, then move along a line in the $x$-$y'$ plane. Details are contained in \cite{HooverThesis}; 
+
+Initial attempts to perform elliptical painting in the SNS have been carried out. Due to current hardware constraints, we did not expect the painted beam to approach the ideal case of zero 4D emittance; however, we did expect significant deviations when compared to the standard correlated painting method. Fig.~\ref{fig:emittances_exp1a} shows the measured emittances at ten intervals over five-hundred injected turns using the standard correlated painting method. As expected, the beam does not develop any significant cross-plane correlations. In Fig.~\ref{fig:emittances_exp1b}, the painting proceeded with initial coordinates ($x$, $x'$, $y$, $y'$) $\approx$ (21 mm, 0 mrad, 0 mm, 0.7 mrad). The measured intrinsic emittances are significantly different than the measured apparent emittances. These plots allow qualitative comparisons with computer simulation and will be useful in future experiments.
 
 
 \begin{figure}
     \centering
     \begin{subfigure}{0.49\columnwidth}
         \includegraphics[width=\textwidth]{figures/emittances_exp1a.pdf}
+        \label{fig:emittances_exp1a}
     \end{subfigure}
     \begin{subfigure}{0.49\columnwidth}
         \includegraphics[width=\textwidth]{figures/emittances_exp1b.pdf}
+        \label{fig:emittances_exp1a}
     \end{subfigure}
     \caption{Caption.}
-    \label{fig:measured_emittances}
 \end{figure}
 
 
 \section{Conclusion}
 \label{sec:Conclusion}
 
-This is a sentence to fill some space.
+
 
 
 
