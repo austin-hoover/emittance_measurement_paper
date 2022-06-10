@@ -24,11 +24,11 @@
 %% $Id: elsarticle-template-num.tex 190 2020-11-23 11:12:32Z rishi $
 %%
 %%
-\documentclass[final,5p,twocolumn,times]{elsarticle}
+% \documentclass[review]{elsarticle}
 
 
 %% Use the option review to obtain double line spacing
-%% \documentclass[authoryear,preprint,review,12pt]{elsarticle}
+\documentclass[preprint,review,times]{elsarticle}
 
 %% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
 %% for a journal layout:
@@ -42,23 +42,19 @@
 %% For including figures, graphicx.sty has been loaded in
 %% elsarticle.cls. If you prefer to use the old commands
 %% please give \usepackage{epsfig}
-
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
-
-%% The lineno packages adds line numbers. Start line numbering with
-%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
-%% for the whole article with \linenumbers.
-%% \usepackage{lineno}
-
+\usepackage[margin=1in]{geometry}
 \usepackage{subcaption} % subfigures
 \usepackage{gensymb} % \degree symbol
 \usepackage{bm}
 \usepackage{amsmath}
 \usepackage{dblfloatfix} % Put figures at bottom of page
 \usepackage{booktabs} % For tables
+\usepackage{lineno} % Line numbers
+\linenumbers
 
 
 
@@ -111,9 +107,7 @@
 %%             state={},
 %%             country={}}
 
-\author[author1]{A. Hoover%
-% \thanks{Currently at Oak Ridge National Laboratory, Oak Ridge, Tennessee 37831, USA.} % This doesn't work!
-}
+\author[author1]{A. Hoover\footnotemark}
 \affiliation[author1]{organization={Department of Physics and Astronomy, University of Tennessee},
             city={Knoxville},
             state={Tennessee},
@@ -156,7 +150,8 @@ A hadron beam with a uniform charge density, elliptical transverse profile, and 
 
 \end{frontmatter}
 
-%% \linenumbers
+\footnotetext{Currently at Oak Ridge National Laboratory, Oak Ridge, Tennessee, 37831, USA.}
+
 
 %% main text
 \section{Introduction}
@@ -254,9 +249,9 @@ The wire-scanner locations, quadrupole locations, and nominal optical functions 
 %
 \begin{figure*}[]
     \centering
-    \raisebox{20pt}{\includegraphics[width=0.71\columnwidth]{fig1a.pdf}
+    \raisebox{20pt}{\includegraphics[width=0.325\columnwidth]{fig1a.pdf}
     \hspace{1cm}}
-    \includegraphics[width=1.2\columnwidth]{fig1b.pdf}
+    \includegraphics[width=0.6\columnwidth]{fig1b.pdf}
     \caption{The wire-scanner region of the ring-target beam transport (RTBT) section of the SNS. The red box indicates where the measurement takes place.}
     \label{fig:1}
 \end{figure*}
@@ -288,7 +283,7 @@ This multi-optics method was tested on a fully accumulated production beam in th
 %
 \begin{figure}[b!]
     \centering
-    \includegraphics[width=\columnwidth]{fig2.pdf}
+    \includegraphics[width=0.65\columnwidth]{fig2.pdf}
     % \par\medskip
     \begin{tabular}{lll}
         \small\textbf{Parameter} & \small\textbf{Measurement} & \small\textbf{Model} \\
@@ -319,7 +314,7 @@ To investigate the sensitivity of the fixed-optics method, we generated a covari
 %
 \begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth]{fig3.pdf}
+    \includegraphics[width=0.5\columnwidth]{fig3.pdf}
     \caption{Simulated emittance measurement using the nominal optics in the RTBT.}
     \label{fig:3}
 \end{figure}
@@ -332,7 +327,7 @@ We performed a similar modification of the RTBT optics, using these previous stu
 %
 \begin{figure}[]
     \centering
-    \includegraphics[width=\columnwidth]{fig4.pdf}
+    \includegraphics[width=0.5\columnwidth]{fig4.pdf}
     \caption{Simulated bias and standard deviation of the intrinsic emittances in the RTBT as a function of the phase advances at WS24.}
     \label{fig:4}
 \end{figure}
@@ -379,7 +374,7 @@ We now demonstrate the usefulness of the fixed-optics emittance measurement. For
 %
 \begin{figure}[b!]
     \centering
-    \includegraphics[width=\columnwidth]{fig6.pdf}
+    \includegraphics[width=0.5\columnwidth]{fig6.pdf}
     \caption{Measured emittances vs. number of injected turns in the SNS ring. (a) correlated (production) painting at 1 GeV; (b) attempted elliptical painting at 1 GeV; (c)-(d) elliptical painting at 0.8 GeV.}
     \label{fig:6}
 \end{figure}
