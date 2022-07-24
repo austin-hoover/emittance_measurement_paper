@@ -344,11 +344,14 @@ Therefore, we chose to vary the phase advances from the first varied quadrupole 
 %
 The quadrupole strengths are contained in the vector $\mathbf{g}$; the calculated phase advances are $\bm{\mu} = (\mu_x, \mu_y)$; the desired phase advances are $\tilde{\bm{\mu}} = (\tilde{\mu}_x, \tilde{\mu}_y)$; the maximum calculated $\beta$ functions in the wire-scanner region are $\bm{\beta}_{max} = (\beta_{x_{max}}, \beta_{y_{max}})$; the maximum allowed $\beta$ functions in the wire-scanner region are $\tilde{\bm{\beta}}_{max} = (\tilde{\beta}_{x_{max}}, \tilde{\beta}_{y_{max}})$; $\epsilon$ is a hand-tuned constant. After this process is completed, the remaining five quadrupoles before the target are used to constrain the beam size at the target.
 
-This multi-optics method was tested on a fully accumulated production beam in the SNS using ten measurements (forty profiles), which were collected in one hour. The reconstructed Twiss parameters, emittances, and best-fit ellipses in the $x$-$x'$ and $y$-$y'$ planes (normalized by the reconstructed Twiss parameters) are displayed in Fig.~\ref{fig:2}.
+This multi-optics method was tested on a fully accumulated production beam in the SNS using ten measurements (forty profiles), which were collected in one hour. The reconstructed Twiss parameters, emittances, and best-fit ellipses in the $x$-$x'$ and $y$-$y'$ planes are displayed in Fig.~\ref{fig:2}.
 %
 \begin{figure}[b!]
     \centering
     \includegraphics[width=\columnwidth]{fig2.pdf}
+    \vfill
+    \vspace*{0.1cm}
+    \vfill
     % \par\medskip
     \begin{tabular}{lll}
         \small\textbf{Parameter} & \small\textbf{Measured} & \small\textbf{Model} \\
@@ -363,7 +366,7 @@ This multi-optics method was tested on a fully accumulated production beam in th
         \small$\varepsilon_y$ [mm~mrad] & \small25.87 $\pm$ \small0.12 & - \\
       \end{tabular}
     % \par\medskip
-    \caption{Reconstructed beam parameters and graphical output (in normalized phase space) from a multi-optics emittance measurement of a production beam.}
+    \caption{Reconstructed beam parameters and graphical output from a multi-optics emittance measurement of a production beam. Each measurement defines a vertical line at $x = \sqrt{\langle{xx}\rangle}$ and $y = \sqrt{\langle{yy}\rangle}$ in phase space at the measurement location. These lines are transported to the reconstruction location using the transfer matrix and plotted on top of the reconstructed ellipses (gray). The coordinates are normalized by the reconstructed Twiss parameters so that the ellipses are circles with areas proportional to $\varepsilon_{x, y}$.}
     \label{fig:2}
 \end{figure}
 %
@@ -374,7 +377,7 @@ A comprehensive study of errors in the multi-optics 4D emittance measurement was
 \begin{figure}
     \centering
     \includegraphics[width=0.5\textwidth]{fig3.pdf}
-    \caption{Measured profiles of a production beam at WS20 in the RTBT.}
+    \caption{Measured profiles of a production beam along the horizontal ($x$), vertical ($y$), and diagonal ($u$) axis at wire-scanner WS20 in the RTBT. Two measurements are overlayed with identical machine settings.}
     \label{fig:3}
 \end{figure}
 %
@@ -390,7 +393,7 @@ To investigate the sensitivity of the fixed-optics method, we generated a covari
 \begin{figure}[!b]
     \centering
     \includegraphics[width=\columnwidth]{fig4.pdf}
-    \caption{Simulated emittance measurement using the nominal optics in the RTBT.}
+    \caption{Simulated emittance measurement using the nominal RTBT optics. The true values are $\varepsilon_1 = \varepsilon_x$ = 32 mm~mrad and $\varepsilon_2 = \varepsilon_y$ = 25 mm~mrad.}
     \label{fig:4}
 \end{figure}
 %
@@ -403,7 +406,7 @@ We performed a similar modification of the RTBT optics, using these previous stu
 \begin{figure}[]
     \centering
     \includegraphics[width=\columnwidth]{fig5.pdf}
-    \caption{Simulated bias and standard deviation of the intrinsic emittances in the RTBT as a function of the phase advances at WS24.}
+    \caption{Simulated bias and standard deviation of the intrinsic emittances in the RTBT as a function of the phase advances at WS24. The true values are $\varepsilon_1 = \varepsilon_2 = \varepsilon_x = \varepsilon_y$ = 20 mm~mrad. Settings that produced no successful trials appear as white cells.}
     \label{fig:5}
 \end{figure}
 %
@@ -420,11 +423,11 @@ We performed a similar modification of the RTBT optics, using these previous stu
        \caption{}
        \label{fig:6b}
     \end{subfigure}
-    \caption{(a) Bias and standard deviations of $\varepsilon_1$ (pink) and $\varepsilon_2$ (blue) from simulated reconstructions in the RTBT as the beam Twiss parameters $\left\{\alpha_x, \alpha_y, \beta_x, \beta_y\right\}$ are scanned within a four-dimensional grid around their nominal values (as defined by the lattice). Each point in each subfigure corresponds to a simulation with different Twiss parameters. The beam emittances are fixed in each column, varying from no cross-plane correlation on the far left to large cross-plane correlation on the far right.  (b) For each subfigure in (a), from left to right, we plot the distribution of intrinsic emittances generated by the random trials for one set of Twiss parameters (greyscale). Each blue shaded band is centered at the mean of the distribution one axis, with a width equal to twice the standard deviation along that axis. The red lines show the true values of the emittances.}
+    \caption{(a) Bias and standard deviations of $\varepsilon_1$ (pink) and $\varepsilon_2$ (blue) from simulated reconstructions in the RTBT as the beam Twiss parameters $\left\{\alpha_x, \alpha_y, \beta_x, \beta_y\right\}$ are scanned within a four-dimensional grid around their nominal values (as defined by the lattice). Each point in each subfigure corresponds to a simulation with different Twiss parameters. The beam emittances are fixed in each column, varying from no cross-plane correlation on the far left to large cross-plane correlation on the far right.  (b) For each subfigure in (a), from left to right, we plot the distribution of intrinsic emittances generated by the random trials for one set of Twiss parameters (greyscale). Each blue shaded band is centered at the mean of the distribution along one axis, with a width equal to twice the standard deviation along that axis. The red lines show the true values of the emittances.}
     \label{fig:6}
 \end{figure*}
 %
-Settings that produced no successful trials appear as white cells. The apparent emittances are not displayed because they remained within 1\% of their true values at every optics setting. Modifying the optics so that $\mu_x - \mu_{x0} = 45\degree$ and $\mu_y - \mu_{y0} = -45\degree$ reduces the bias to $\approx 7\%$ and the standard deviation to $\approx 5\%$. The fraction of failed fits, which is very large along the diagonal in the figure, is reduced to zero at this setting.
+The apparent emittances are not displayed because they remained within 1\% of their true values at every optics setting. Modifying the optics so that $\mu_x - \mu_{x0} = 45\degree$ and $\mu_y - \mu_{y0} = -45\degree$ reduces the bias to $\approx 7\%$ and the standard deviation to $\approx 5\%$. The fraction of failed fits, which is very large along the diagonal in the figure, is reduced to zero at this setting.
 
 It is also important to examine the effect of mismatched beam parameters — $\alpha_x$, $\beta_x$, $\alpha_y$, $\beta_y$ — on the accuracy of the reconstructed intrinsic emittances, just as was done for the apparent emittances in \cite{Prat2014}. All previous phase advance calculations have assumed that the beam Twiss parameters are the same as the ring Twiss parameters at extraction. It is possible, however, for space charge to effectively modify the ring Twiss parameters, resulting in mismatch when entering the RTBT. This modification is small for the normal injection scheme, as shown in Fig.~\ref{fig:2}, but we have generated more significant mismatch in our studies of non-standard injection schemes at lower beam energies. One example is shown in Table~\ref{tab:mismatch}.
 %
@@ -441,7 +444,7 @@ It is also important to examine the effect of mismatched beam parameters — $\a
         $\alpha_y$ & 1.17 & 1.91 \\
         \midrule 
     \end{tabular}
-    \caption{Measured and model Twiss values in the RTBT.}
+    \caption{Measured and model beam Twiss parameters in the RTBT.}
     \label{tab:mismatch}
 \end{table}
 %
@@ -465,7 +468,7 @@ We first display the measured emittance evolution of a 1 GeV beam produced by th
 \begin{figure}[t!]
     \centering
     \includegraphics[width=\columnwidth]{fig7.pdf}
-    \caption{Measured emittances vs. number of injected turns in the SNS ring. (a) correlated (production) painting at 1 GeV; (b) attempted elliptical painting at 1 GeV; (c)-(d) elliptical painting at 0.8 GeV. In (d), the painted beam size was increased and the beam intensity was decreased relative to (c).}
+    \caption{Measured emittances vs. number of injected turns in the SNS ring. (a) correlated (production) painting at 1 GeV; (b) attempted elliptical painting at 1 GeV; (c)-(d) elliptical painting at 0.8 GeV. In (d), the painted beam size was increased and the beam intensity was decreased relative to (c). Each error bar is calculated from the mean and standard deviation of 5000 trials: in each trial, the emittances are reconstructed from a random 3\% perturbation of the measured moments.}
     \label{fig:7}
 \end{figure}
 %
@@ -518,7 +521,7 @@ This manuscript has been authored by UT-Battelle, LLC, under Contract No. DE-AC0
         \caption{}
         \label{fig:9b}
     \end{subfigure}
-    \caption{Emittance distribution used to produce the error bars in Fig.~\ref{fig:7}d at (a) 150 turns (b) 400 turns. The points were generated by reconstructing the covariance matrix from perturbations of the measured moments. The measured values are plotted in red.}
+    \caption{Emittance distribution used to produce the error bars in Fig.~\ref{fig:7}d at (a) 150 turns (b) 400 turns. 5000 reconstructions were performed from random 3\% perturbations of the measured moments. The measured emittances are plotted in red.}
     \label{fig:9}
 \end{figure*}
 %
